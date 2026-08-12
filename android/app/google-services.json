@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "190954318202",
+    "project_id": "air-sense-cb4e2",
+    "storage_bucket": "air-sense-cb4e2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190954318202:android:e73314de0dc108802ccec3",
+        "android_client_info": {
+          "package_name": "com.company.airsense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSqxULEOLds133lf_KPeFqGwBuGx52tKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190954318202:android:7b47079524f14e9f2ccec3",
+        "android_client_info": {
+          "package_name": "com.example.air_sense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSqxULEOLds133lf_KPeFqGwBuGx52tKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
