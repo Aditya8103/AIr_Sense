@@ -1,15 +1,10 @@
+import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
-
 import 'package:flutter/material.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-
-import 'package:firebase_database/firebase_database.dart';
-
+import '../../core/services/api_service.dart';
 import '../../core/theme/app_colors.dart';
-
 import '../../shared/widgets/filter_chip.dart';
-
 import '../../shared/widgets/trend_card.dart';
 
 class AnalyticsScreen extends StatefulWidget {
@@ -30,47 +25,38 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     'CUSTOM',
   ];
 
-  // ================= FIREBASE =================
-  final DatabaseReference database = FirebaseDatabase.instanceFor(
-    app: Firebase.app(),
-    databaseURL: "https://air-sense-cb4e2-default-rtdb.firebaseio.com/",
-  ).ref("air_quality");
-
   // ================= LIVE VALUES =================
   int aqi = 0;
-
   int co2 = 0;
-
   double smoke = 0;
-
   double temperature = 0;
-
   double humidity = 0;
+
+  StreamSubscription? _subscription;
 
   // ================= INIT =================
   @override
   void initState() {
     super.initState();
-
     fetchRealtimeData();
   }
 
-  // ================= FETCH REALTIME DATA =================
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  // ================= FETCH REALTIME DATA VIA API SERVICE =================
   void fetchRealtimeData() {
-    database.onValue.listen((event) {
-      final data = event.snapshot.value as Map?;
-
-      if (data != null) {
+    _subscription = ApiService().getSensorStream().listen((data) {
+      if (mounted) {
         setState(() {
-          aqi = data['aqi'] ?? 0;
-
-          co2 = data['co2'] ?? 0;
-
-          smoke = (data['smoke'] ?? 0).toDouble();
-
-          temperature = (data['temperature'] ?? 0).toDouble();
-
-          humidity = (data['humidity'] ?? 0).toDouble();
+          aqi = data.aqi;
+          co2 = data.co2.toInt();
+          smoke = data.smoke;
+          temperature = data.temperature;
+          humidity = data.humidity;
         });
       }
     });

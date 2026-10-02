@@ -1,15 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-
-import 'package:firebase_database/firebase_database.dart';
-
 import '../../app.dart';
-
+import '../../core/services/api_service.dart';
 import '../../core/theme/app_colors.dart';
-
 import '../../shared/widgets/profile_option.dart';
-
 import '../../shared/widgets/setting_switch.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,55 +15,42 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // ================= FIREBASE =================
-  final DatabaseReference database = FirebaseDatabase.instanceFor(
-    app: Firebase.app(),
-    databaseURL: "https://air-sense-cb4e2-default-rtdb.firebaseio.com/",
-  ).ref("air_quality");
-
   // ================= SENSOR VALUES =================
   int aqi = 0;
-
   int co2 = 0;
-
   double smoke = 0;
-
   double temperature = 0;
-
   double humidity = 0;
-
   bool deviceOnline = false;
-
   bool darkTheme = true;
-
   bool notificationsEnabled = true;
+
+  StreamSubscription? _subscription;
 
   // ================= INIT =================
   @override
   void initState() {
     super.initState();
-
     fetchRealtimeData();
   }
 
-  // ================= FETCH DATA =================
-  void fetchRealtimeData() {
-    database.onValue.listen((event) {
-      final data = event.snapshot.value as Map?;
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
 
-      if (data != null) {
+  // ================= FETCH DATA VIA API SERVICE =================
+  void fetchRealtimeData() {
+    _subscription = ApiService().getSensorStream().listen((data) {
+      if (mounted) {
         setState(() {
           deviceOnline = true;
-
-          aqi = data['aqi'] ?? 0;
-
-          co2 = data['co2'] ?? 0;
-
-          smoke = (data['smoke'] ?? 0).toDouble();
-
-          temperature = (data['temperature'] ?? 0).toDouble();
-
-          humidity = (data['humidity'] ?? 0).toDouble();
+          aqi = data.aqi;
+          co2 = data.co2.toInt();
+          smoke = data.smoke;
+          temperature = data.temperature;
+          humidity = data.humidity;
         });
       }
     });
@@ -224,8 +206,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 16),
 
-            SettingSwitch(
-              icon: const Icon(
+            const SettingSwitch(
+              icon: Icon(
                 Icons.warning_amber_rounded,
                 color: AppColors.primary,
               ),
@@ -306,7 +288,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   applicationName: 'Air Sense',
                   applicationVersion: '1.0.0',
                   applicationLegalese:
-                      'Realtime Air Quality Monitoring System using ESP32 + Firebase + Flutter.',
+                      'Realtime Air Quality Monitoring System using ESP32 + Spring Boot + MySQL + Flutter.',
                 );
               },
             ),
