@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'core/routes/app_routes.dart';
-
 import 'core/theme/app_theme.dart';
 
 class AeroGuardApp extends StatefulWidget {
@@ -18,9 +17,18 @@ class AeroGuardApp extends StatefulWidget {
 class _AeroGuardAppState extends State<AeroGuardApp> {
   ThemeMode themeMode = ThemeMode.dark;
 
+  bool get isDarkMode => themeMode == ThemeMode.dark;
+
   void toggleTheme(bool isDark) {
     setState(() {
       themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
+
+  void switchTheme() {
+    setState(() {
+      themeMode =
+          themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
     });
   }
 

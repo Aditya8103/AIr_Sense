@@ -20,74 +20,59 @@ class ProfileOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardColor = AppColors.getCard(context);
+    final borderColor = AppColors.getBorder(context);
+    final textColor = AppColors.getText(context);
+    final secondaryTextColor = AppColors.getSecondaryText(context);
+    final bgColor = AppColors.getBackground(context);
+
     return InkWell(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(14),
       onTap: onTap,
-
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
+        margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 16,
+          horizontal: 18,
+          vertical: 14,
         ),
-
         decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppColors.border,
-          ),
+          color: cardColor,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: borderColor),
         ),
-
         child: Row(
           children: [
             Container(
               width: 42,
               height: 42,
-
               decoration: BoxDecoration(
-                color: AppColors.background,
+                color: bgColor,
                 borderRadius: BorderRadius.circular(10),
               ),
-
               child: Center(
                 child: icon,
               ),
             ),
-
             const SizedBox(width: 16),
-
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-
                     style: TextStyle(
-                      color: danger
-                          ? AppColors.danger
-                          : Colors.white,
-
+                      color: danger ? AppColors.danger : textColor,
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: 15,
                     ),
                   ),
-
                   if (subtitle != 'empty')
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 4),
-
+                      padding: const EdgeInsets.only(top: 3),
                       child: Text(
                         subtitle,
-
-                        style: const TextStyle(
-                          color:
-                              AppColors.secondaryText,
-
+                        style: TextStyle(
+                          color: secondaryTextColor,
                           fontSize: 12,
                         ),
                       ),
@@ -95,12 +80,11 @@ class ProfileOption extends StatelessWidget {
                 ],
               ),
             ),
-
             if (!danger)
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
-                color: AppColors.secondaryText,
-              )
+                color: secondaryTextColor,
+              ),
           ],
         ),
       ),

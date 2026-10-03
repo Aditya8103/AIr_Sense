@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+import '../../app.dart';
 import '../../core/services/api_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../shared/widgets/alert_item.dart';
@@ -139,18 +140,35 @@ class _AlertsScreenState extends State<AlertsScreen> {
   // ================= UI =================
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = AppColors.getText(context);
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'LIVE ALERTS',
           style: TextStyle(
             fontWeight: FontWeight.w800,
             letterSpacing: 1,
+            color: textColor,
           ),
         ),
+        actions: [
+          IconButton(
+            tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+            icon: Icon(
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              color: isDark ? Colors.amber : const Color(0xFF1E293B),
+            ),
+            onPressed: () {
+              AeroGuardApp.of(context)?.switchTheme();
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),

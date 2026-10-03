@@ -11,6 +11,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.getBackground(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -21,21 +22,27 @@ class SplashScreen extends StatelessWidget {
                 child: Center(
                   child: Lottie.network(
                     'https://assets10.lottiefiles.com/packages/lf20_gjmecwii.json',
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.air_rounded,
+                      size: 120,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ),
-              const Text(
+              Text(
                 'Air Sense',
                 style: TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.bold,
+                  color: AppColors.getText(context),
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Precision Air Monitoring',
                 style: TextStyle(
-                  color: AppColors.secondaryText,
+                  color: AppColors.getSecondaryText(context),
                   fontSize: 18,
                 ),
               ),
@@ -45,7 +52,7 @@ class SplashScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.pushReplacementNamed(
                     context,
-                    AppRoutes.dashboard,
+                    AppRoutes.login,
                   );
                 },
               ),

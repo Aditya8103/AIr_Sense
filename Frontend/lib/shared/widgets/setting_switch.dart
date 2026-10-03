@@ -17,12 +17,10 @@ class SettingSwitch extends StatefulWidget {
   });
 
   @override
-  State<SettingSwitch> createState() =>
-      _SettingSwitchState();
+  State<SettingSwitch> createState() => _SettingSwitchState();
 }
 
-class _SettingSwitchState
-    extends State<SettingSwitch> {
+class _SettingSwitchState extends State<SettingSwitch> {
   late bool enabled;
 
   @override
@@ -33,74 +31,63 @@ class _SettingSwitchState
 
   @override
   Widget build(BuildContext context) {
+    final cardColor = AppColors.getCard(context);
+    final borderColor = AppColors.getBorder(context);
+    final textColor = AppColors.getText(context);
+    final secondaryTextColor = AppColors.getSecondaryText(context);
+    final bgColor = AppColors.getBackground(context);
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 16,
+        horizontal: 18,
+        vertical: 14,
       ),
-
       decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        color: cardColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: borderColor),
       ),
-
       child: Row(
         children: [
           Container(
             width: 42,
             height: 42,
-
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: bgColor,
               borderRadius: BorderRadius.circular(10),
             ),
-
             child: Center(
               child: widget.icon,
             ),
           ),
-
           const SizedBox(width: 16),
-
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   widget.title,
-
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: 15,
+                    color: textColor,
                   ),
                 ),
-
-                const SizedBox(height: 4),
-
+                const SizedBox(height: 3),
                 Text(
                   widget.subtitle,
-
-                  style: const TextStyle(
-                    color: AppColors.secondaryText,
+                  style: TextStyle(
+                    color: secondaryTextColor,
                     fontSize: 12,
                   ),
                 ),
               ],
             ),
           ),
-
           Switch(
             value: enabled,
-
             activeColor: AppColors.primary,
-
             onChanged: (value) {
               setState(() {
                 enabled = value;

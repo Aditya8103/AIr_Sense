@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 
@@ -20,17 +20,26 @@ class SensorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardColor = AppColors.getCard(context);
+    final borderColor = AppColors.getBorder(context);
+    final textColor = AppColors.getText(context);
+    final secondaryTextColor = AppColors.getSecondaryText(context);
+
     return Container(
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(
+                Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,56 +47,54 @@ class SensorCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               icon,
-
               Container(
-                width: 8,
-                height: 8,
-
+                width: 10,
+                height: 10,
                 decoration: BoxDecoration(
                   color: color,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withOpacity(0.4),
+                      blurRadius: 4,
+                      spreadRadius: 1,
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           ),
-
           const Spacer(),
-
           Text(
             label,
-
-            style: const TextStyle(
-              color: AppColors.secondaryText,
+            style: TextStyle(
+              color: secondaryTextColor,
               fontSize: 12,
               fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
             ),
           ),
-
           const SizedBox(height: 6),
-
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 value,
-
-                style: const TextStyle(
-                  fontSize: 28,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               const SizedBox(width: 4),
-
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
-
                 child: Text(
                   unit,
-
-                  style: const TextStyle(
-                    color: AppColors.secondaryText,
+                  style: TextStyle(
+                    color: secondaryTextColor,
                     fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),

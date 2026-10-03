@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../app.dart';
+import '../../core/routes/app_routes.dart';
 import '../../core/services/api_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../shared/widgets/profile_option.dart';
@@ -22,7 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double temperature = 0;
   double humidity = 0;
   bool deviceOnline = false;
-  bool darkTheme = true;
   bool notificationsEnabled = true;
 
   StreamSubscription? _subscription;
@@ -59,14 +59,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // ================= UI =================
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = AppColors.getCard(context);
+    final borderColor = AppColors.getBorder(context);
+    final textColor = AppColors.getText(context);
+    final secondaryTextColor = AppColors.getSecondaryText(context);
+
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Profile',
+        title: Text(
+          'Profile & Settings',
+          style: TextStyle(
+            color: textColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        actions: [
+          IconButton(
+            tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+            icon: Icon(
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              color: isDark ? Colors.amber : const Color(0xFF1E293B),
+            ),
+            onPressed: () {
+              AeroGuardApp.of(context)?.switchTheme();
+            },
+          ),
+          IconButton(
+            tooltip: 'Settings',
+            icon: Icon(Icons.settings_outlined, color: textColor),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.settings);
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -81,32 +111,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: 96,
                     height: 96,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
+                      color: cardColor,
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.border,
-                      ),
+                      border: Border.all(color: borderColor, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Icon(
-                      deviceOnline ? Icons.wifi : Icons.wifi_off,
+                      deviceOnline ? Icons.wifi_rounded : Icons.wifi_off_rounded,
                       size: 42,
                       color: deviceOnline ? Colors.green : Colors.red,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Air Sense Device',
+                  Text(
+                    'AirSense Urban Node',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
+                      color: textColor,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    deviceOnline ? 'ESP32 Connected' : 'Device Offline',
+                    deviceOnline ? 'ESP32 Connected' : 'Device Offline (Standby)',
                     style: TextStyle(
-                      color: deviceOnline ? Colors.green : Colors.red,
-                      fontWeight: FontWeight.bold,
+                      color: deviceOnline ? Colors.green : Colors.redAccent,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -115,33 +151,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 32),
 
-            // ================= THEME =================
-            const Text(
-              'APPEARANCE',
+            // ================= APPEARANCE / THEME =================
+            Text(
+              'APPEARANCE & THEME',
               style: TextStyle(
-                color: AppColors.secondaryText,
+                color: secondaryTextColor,
                 fontWeight: FontWeight.bold,
+                fontSize: 12,
                 letterSpacing: 1.2,
               ),
             ),
+            const SizedBox(height: 12),
 
-            const SizedBox(height: 16),
-
-            SwitchListTile(
-              value: darkTheme,
-              onChanged: (value) {
-                setState(() {
-                  darkTheme = value;
-                });
-
-                AeroGuardApp.of(context)?.toggleTheme(value);
-              },
-              activeColor: AppColors.primary,
-              title: const Text(
-                'Dark Theme',
+            Container(
+              decoration: BoxDecoration(
+                color: cardColor,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: borderColor),
               ),
-              subtitle: Text(
-                darkTheme ? 'Dark Mode Enabled' : 'Light Mode Enabled',
+              child: SwitchListTile(
+                value: isDark,
+                onChanged: (value) {
+                  AeroGuardApp.of(context)?.toggleTheme(value);
+                },
+                activeColor: AppColors.primary,
+                secondary: Icon(
+                  isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                  color: isDark ? AppColors.primary : Colors.amber,
+                ),
+                title: Text(
+                  'Dark Theme',
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                subtitle: Text(
+                  isDark ? 'Dark Mode Active' : 'Light Mode Active',
+                  style: TextStyle(color: secondaryTextColor),
+                ),
               ),
             ),
 
@@ -151,43 +199,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
+                color: cardColor,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppColors.border,
-                ),
+                border: Border.all(color: borderColor),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'LIVE SENSOR STATUS',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 16,
+                      color: textColor,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
+                  _sensorRow(context, 'AQI', '$aqi'),
+                  _sensorRow(context, 'CO2', '$co2 ppm'),
+                  _sensorRow(context, 'Smoke', '${smoke.toStringAsFixed(2)} mg/m³'),
+                  _sensorRow(context, 'Temperature',
+                      '${temperature.toStringAsFixed(1)} °C'),
                   _sensorRow(
-                    'AQI',
-                    '$aqi',
-                  ),
-                  _sensorRow(
-                    'CO2',
-                    '$co2 ppm',
-                  ),
-                  _sensorRow(
-                    'Smoke',
-                    smoke.toStringAsFixed(2),
-                  ),
-                  _sensorRow(
-                    'Temperature',
-                    '${temperature.toStringAsFixed(1)} °C',
-                  ),
-                  _sensorRow(
-                    'Humidity',
-                    '${humidity.toStringAsFixed(1)}%',
-                  ),
+                      context, 'Humidity', '${humidity.toStringAsFixed(1)}%'),
                 ],
               ),
             ),
@@ -195,16 +229,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 32),
 
             // ================= NOTIFICATIONS =================
-            const Text(
+            Text(
               'NOTIFICATIONS',
               style: TextStyle(
-                color: AppColors.secondaryText,
+                color: secondaryTextColor,
                 fontWeight: FontWeight.bold,
+                fontSize: 12,
                 letterSpacing: 1.2,
               ),
             ),
-
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
             const SettingSwitch(
               icon: Icon(
@@ -212,33 +246,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: AppColors.primary,
               ),
               title: 'Critical Alerts',
-              subtitle: 'Receive dangerous gas alerts',
+              subtitle: 'Receive dangerous gas and spike alerts',
               initialValue: true,
             ),
+            const SizedBox(height: 8),
 
             SettingSwitch(
               icon: const Icon(
-                Icons.notifications_active,
+                Icons.notifications_active_rounded,
                 color: AppColors.primary,
               ),
               title: 'Realtime Notifications',
-              subtitle: 'Live ESP32 updates',
+              subtitle: 'Live sensor telemetry notifications',
               initialValue: notificationsEnabled,
             ),
 
             const SizedBox(height: 32),
 
             // ================= DEVICE SETTINGS =================
-            const Text(
-              'DEVICE SETTINGS',
+            Text(
+              'PREFERENCES & DEVICE',
               style: TextStyle(
-                color: AppColors.secondaryText,
+                color: secondaryTextColor,
                 fontWeight: FontWeight.bold,
+                fontSize: 12,
                 letterSpacing: 1.2,
               ),
             ),
-
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
             ProfileOption(
               icon: const Icon(
@@ -246,24 +281,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: AppColors.primary,
               ),
               title: 'Device Settings',
-              subtitle: 'ESP32 Configuration',
+              subtitle: 'ESP32 Wi-Fi & Sensor calibration',
               danger: false,
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text(
-                        'Device Settings',
-                      ),
+                      title: const Text('Device Settings'),
                       content: const Text(
-                        'Configure ESP32 WiFi, sensor calibration, and update interval settings.',
+                        'Node ID: ESP32_AIR_01\nProtocol: HTTP/REST\nFirmware: v2.1.0-urban',
                       ),
                       actions: [
                         TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: () => Navigator.pop(context),
                           child: const Text('OK'),
                         ),
                       ],
@@ -273,56 +304,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
 
-            // ================= ABOUT APP =================
             ProfileOption(
               icon: const Icon(
                 Icons.info_outline_rounded,
                 color: AppColors.primary,
               ),
               title: 'About App',
-              subtitle: 'Air Sense v1.0',
+              subtitle: 'AirSense Smart Urban Platform v1.2',
               danger: false,
               onTap: () {
                 showAboutDialog(
                   context: context,
                   applicationName: 'Air Sense',
-                  applicationVersion: '1.0.0',
+                  applicationVersion: '1.2.0',
                   applicationLegalese:
-                      'Realtime Air Quality Monitoring System using ESP32 + Spring Boot + MySQL + Flutter.',
+                      'Urban Air Quality Monitoring & Pollution Mitigation System.',
                 );
               },
             ),
 
-            // ================= LOGOUT =================
             ProfileOption(
               icon: const Icon(
                 Icons.logout_rounded,
                 color: AppColors.danger,
               ),
               title: 'Logout',
-              subtitle: 'Exit application',
+              subtitle: 'Sign out to Login Screen',
               danger: true,
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text(
-                        'Logout',
-                      ),
-                      content: const Text(
-                        'Are you sure you want to logout?',
-                      ),
+                      title: const Text('Logout'),
+                      content: const Text('Are you sure you want to sign out?'),
                       actions: [
                         TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: () => Navigator.pop(context),
                           child: const Text('Cancel'),
                         ),
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.danger,
+                            foregroundColor: Colors.white,
+                          ),
                           onPressed: () {
                             Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                                context, AppRoutes.login);
                           },
                           child: const Text('Logout'),
                         ),
@@ -338,30 +367,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ================= SENSOR ROW =================
-  Widget _sensorRow(
-    String label,
-    String value,
-  ) {
+  Widget _sensorRow(BuildContext context, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(
-        bottom: 12,
-      ),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: AppColors.secondaryText,
-              fontSize: 15,
+            style: TextStyle(
+              color: AppColors.getSecondaryText(context),
+              fontSize: 14,
             ),
           ),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: 15,
+              color: AppColors.getText(context),
             ),
           ),
         ],
