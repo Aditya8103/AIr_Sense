@@ -33,16 +33,11 @@ RUN chown -R airsense:airsense /app
 # Switch to non-root user
 USER airsense
 
-# Expose Spring Boot default port
-EXPOSE 8080
+# Expose ports (8080 standard, 10000 for Render)
+EXPOSE 8080 10000
 
 # Configure JVM memory and garbage collection optimizations for containerized environments
 ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
-
-# Default database environment variables (can be overridden at runtime or via docker-compose)
-ENV SPRING_DATASOURCE_URL="" \
-    SPRING_DATASOURCE_USERNAME="" \
-    SPRING_DATASOURCE_PASSWORD=""
 
 # Run application
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

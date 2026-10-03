@@ -28,7 +28,7 @@ RUN chown -R airsense:airsense /app
 
 USER airsense
 
-EXPOSE 8080
+EXPOSE 8080 10000
 
 ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
 
