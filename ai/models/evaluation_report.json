@@ -1,0 +1,59 @@
+{
+  "model_name": "Linear Regression",
+  "test_dataset_size": 16980,
+  "regression_metrics": {
+    "mae": 12.708,
+    "rmse": 26.034,
+    "r2": 0.946,
+    "median_absolute_error": 6.062,
+    "p90_error": 28.932
+  },
+  "risk_classification_accuracy": 0.876,
+  "risk_tier_metrics": [
+    {
+      "Risk Tier": "LOW",
+      "Precision": 0.959,
+      "Recall": 0.918,
+      "F1-Score": 0.938,
+      "Support": 7400.0
+    },
+    {
+      "Risk Tier": "MODERATE",
+      "Precision": 0.621,
+      "Recall": 0.671,
+      "F1-Score": 0.645,
+      "Support": 1937.0
+    },
+    {
+      "Risk Tier": "HIGH",
+      "Precision": 0.784,
+      "Recall": 0.804,
+      "F1-Score": 0.794,
+      "Support": 3019.0
+    },
+    {
+      "Risk Tier": "CRITICAL",
+      "Precision": 0.926,
+      "Recall": 0.942,
+      "F1-Score": 0.934,
+      "Support": 4624.0
+    }
+  ],
+  "top_features": {
+    "PM2.5": 79.7768,
+    "TEMP": 22.3336,
+    "temp_lag_1": 22.3179,
+    "humidity": 18.2647,
+    "humidity_lag_1": 15.3301,
+    "co_lag_1": 11.4317,
+    "CO": 10.7554,
+    "pm25_lag_1": 9.6158,
+    "pm25_rolling_mean_24h": 3.869,
+    "PM10": 3.044,
+    "pm25_lag_2": 2.9241,
+    "pm25_rolling_mean_3h": 2.0148,
+    "pm25_rolling_mean_6h": 1.7498,
+    "hour_cos": 1.7205,
+    "month_cos": 1.7203
+  }
+}

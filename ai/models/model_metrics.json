@@ -1,0 +1,32 @@
+{
+  "best_model": "Linear Regression",
+  "metrics": {
+    "Linear Regression": {
+      "Val_MAE": 9.438,
+      "Val_RMSE": 17.311,
+      "Val_R2": 0.9483,
+      "Test_MAE": 12.783,
+      "Test_RMSE": 26.111,
+      "Test_R2": 0.9456,
+      "Train_Time_s": 0.63
+    },
+    "Random Forest": {
+      "Val_MAE": 9.531,
+      "Val_RMSE": 18.903,
+      "Val_R2": 0.9383,
+      "Test_MAE": 12.321,
+      "Test_RMSE": 26.587,
+      "Test_R2": 0.9436,
+      "Train_Time_s": 32.42
+    },
+    "XGBoost": {
+      "Val_MAE": 8.939,
+      "Val_RMSE": 17.43,
+      "Val_R2": 0.9476,
+      "Test_MAE": 12.426,
+      "Test_RMSE": 27.086,
+      "Test_R2": 0.9415,
+      "Train_Time_s": 12.67
+    }
+  }
+}

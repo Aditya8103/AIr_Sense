@@ -1,0 +1,18 @@
+@"
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Training datasets
+ai/data/raw/
+ai/data/processed/
+
+# Local release package
+AirSense-AI-Release/
+"@ | Out-File -FilePath .gitignore -Encoding utf8

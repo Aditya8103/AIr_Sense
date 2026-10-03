@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "deviceId": "ESP32_NODE_01",
+      "location": "Junction A (Suburban Entry)",
+      "pm25": 42.0,
+      "temperature": 26.5,
+      "humidity": 55.0,
+      "co": 600.0,
+      "hour": 18
+    },
+    {
+      "deviceId": "ESP32_NODE_02",
+      "location": "Junction B (Central Market)",
+      "pm25": 51.0,
+      "temperature": 27.8,
+      "humidity": 58.0,
+      "co": 850.0,
+      "hour": 18
+    },
+    {
+      "deviceId": "ESP32_NODE_03",
+      "location": "Junction C (Bus Terminal)",
+      "pm25": 118.0,
+      "temperature": 29.2,
+      "humidity": 65.0,
+      "co": 1850.0,
+      "hour": 18
+    },
+    {
+      "deviceId": "ESP32_NODE_04",
+      "location": "Junction D (Industrial Bypass)",
+      "pm25": 145.0,
+      "temperature": 30.5,
+      "humidity": 60.0,
+      "co": 2500.0,
+      "hour": 18
+    }
+  ]
+}
