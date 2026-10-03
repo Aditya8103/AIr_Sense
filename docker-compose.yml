@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # AirSense Spring Boot Backend (Java 21)
+  # ============================================================================
+  backend:
+    build:
+      context: ./airsense-backend
+      dockerfile: Dockerfile
+    container_name: airsense-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Defaults to configured Aiven Cloud MySQL database; override with .env or environment variables
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mysql://mysql-31858198-avverma7620-82ac.d.aivencloud.com:27112/airsense_db?sslMode=REQUIRED&useSSL=true&allowPublicKeyRetrieval=true&autoReconnect=true}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-avnadmin}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-AVNS_6-I1ATe-IUN7rbFuo2x}
+      JAVA_OPTS: "-Xms256m -Xmx512m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+    networks:
+      - airsense-net
+
+  # ============================================================================
+  # AirSense Flutter Web Frontend (Nginx SPA + Reverse Proxy)
+  # ============================================================================
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: airsense-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - airsense-net
+
+  # ============================================================================
+  # (Optional) Standalone Local MySQL Database
+  # Run with: docker compose --profile local-db up -d
+  # ============================================================================
+  mysql:
+    image: mysql:8.0
+    container_name: airsense-mysql
+    profiles:
+      - local-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: airsense_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - airsense-net
+
+networks:
+  airsense-net:
+    driver: bridge
+
+volumes:
+  mysql_data:

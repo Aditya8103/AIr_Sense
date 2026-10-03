@@ -76,9 +76,9 @@ graph TD
 
 ---
 
-## 🔄 Project Evolution & Transition
+## 🔄 Architecture & Backend
 
-Initially prototyped using Firebase Realtime Database (`firebase_core`, `firebase_database`), the architecture was migrated to a custom **Spring Boot + Cloud MySQL** backend to achieve:
+The architecture is built on a custom **Spring Boot + Cloud MySQL** backend to achieve:
 - **Full Data Ownership**: Eliminates vendor lock-in with a relational SQL schema.
 - **Server-Side Business Logic**: Automatic AQI calculation, sensor telemetry normalization, and server-side threshold alert dispatch.
 - **Device Management**: Explicit device registration, heartbeat monitoring, and activity timestamps.
@@ -110,7 +110,7 @@ Initially prototyped using Firebase Realtime Database (`firebase_core`, `firebas
 ### 2. Frontend Application (`Frontend`)
 - **Flutter 3 (Dart 3)**: Single codebase targeting Android, iOS, Web, and Desktop.
 - **Custom `ApiService` Integration**:
-  - Replaced Firebase listeners with reactive streams (`getSensorStream()`) using dynamic periodic polling.
+  - Reactive streams (`getSensorStream()`) using dynamic periodic polling.
   - Automatic platform-aware base URL resolution (`10.0.2.2:8080` on Android emulator vs `localhost:8080` on web/desktop).
 - **Real-Time Dashboard (`DashboardScreen`)**:
   - Live metric cards for AQI, Temperature, Humidity, CO2, and Smoke.
@@ -309,6 +309,38 @@ Content-Type: application/json
      ```bash
      flutter run -d <emulator-id>
      ```
+
+---
+
+### 🐳 Docker Deployment
+
+You can build and deploy AirSense using Docker and Docker Compose:
+
+#### 1. Run with Docker Compose (Recommended)
+Run backend and web frontend together:
+```bash
+docker compose up -d --build
+```
+- **Backend API**: `http://localhost:8080/api`
+- **Flutter Web UI**: `http://localhost`
+
+If you want to run an offline local MySQL database container instead of the cloud database:
+```bash
+docker compose --profile local-db up -d --build
+```
+
+#### 2. Build & Run Backend Standalone
+```bash
+cd airsense-backend
+docker build -t airsense-backend .
+docker run -p 8080:8080 airsense-backend
+```
+
+#### 3. Deploy to Cloud (Render / Railway / Cloud Run / AWS)
+The repository includes root and service-level Dockerfiles. Point your cloud container builder to:
+- **Dockerfile**: `./Dockerfile` (or `./airsense-backend/Dockerfile`)
+- **Port**: `8080`
+- **Environment Variables**: Configure `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, and `SPRING_DATASOURCE_PASSWORD`.
 
 ---
 

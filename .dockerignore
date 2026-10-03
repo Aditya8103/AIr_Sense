@@ -1,0 +1,14 @@
+.git/
+.gitignore
+**/target/
+**/build/
+**/.dart_tool/
+**/.idea/
+**/.vscode/
+**/*.iml
+Frontend/android/
+Frontend/ios/
+Frontend/linux/
+Frontend/windows/
+Frontend/macos/
+*.log

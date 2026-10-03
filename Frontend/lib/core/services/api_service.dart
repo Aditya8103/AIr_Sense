@@ -46,7 +46,7 @@ class ApiService {
     return null;
   }
 
-  /// Live periodic stream of sensor readings (mimics Firebase onValue.listen)
+  /// Live periodic stream of sensor readings
   Stream<SensorData> getSensorStream({
     String? deviceId,
     Duration interval = const Duration(seconds: 3),
