@@ -10,17 +10,20 @@ class ApiService {
   factory ApiService() => _instance;
   ApiService._internal();
 
-  /// Determine host based on runtime platform
+  /// Production Render backend URL
+  static const String liveServerUrl = 'https://air-sense-udkn.onrender.com/api';
+
+  /// Timeout for API requests (15s accommodates Render free tier cold starts)
+  static const Duration requestTimeout = Duration(seconds: 15);
+
+  /// Determine host based on environment or production default
   static String get defaultBaseUrl {
-    if (kIsWeb) {
-      return 'http://localhost:8080/api';
+    // Allows overriding via --dart-define=API_BASE_URL=... if desired
+    const fromEnv = String.fromEnvironment('API_BASE_URL');
+    if (fromEnv.isNotEmpty) {
+      return fromEnv;
     }
-    // Android Emulator routes localhost through 10.0.2.2
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:8080/api';
-    }
-    // Windows, macOS, Linux, iOS Simulator
-    return 'http://localhost:8080/api';
+    return liveServerUrl;
   }
 
   String baseUrl = defaultBaseUrl;
@@ -32,7 +35,7 @@ class ApiService {
         queryParameters: deviceId != null ? {'deviceId': deviceId} : null,
       );
 
-      final response = await http.get(uri).timeout(const Duration(seconds: 5));
+      final response = await http.get(uri).timeout(requestTimeout);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = jsonDecode(response.body);
@@ -74,7 +77,7 @@ class ApiService {
       final uri = Uri.parse('$baseUrl/sensors/history')
           .replace(queryParameters: queryParams);
 
-      final response = await http.get(uri).timeout(const Duration(seconds: 5));
+      final response = await http.get(uri).timeout(requestTimeout);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = jsonDecode(response.body);
@@ -97,7 +100,7 @@ class ApiService {
         queryParameters: deviceId != null ? {'deviceId': deviceId} : null,
       );
 
-      final response = await http.get(uri).timeout(const Duration(seconds: 5));
+      final response = await http.get(uri).timeout(requestTimeout);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = jsonDecode(response.body);
@@ -117,7 +120,7 @@ class ApiService {
   Future<bool> markAlertAsRead(int alertId) async {
     try {
       final uri = Uri.parse('$baseUrl/alerts/$alertId/read');
-      final response = await http.put(uri).timeout(const Duration(seconds: 5));
+      final response = await http.put(uri).timeout(requestTimeout);
       return response.statusCode == 200;
     } catch (e) {
       debugPrint('[ApiService] Error marking alert as read: $e');
