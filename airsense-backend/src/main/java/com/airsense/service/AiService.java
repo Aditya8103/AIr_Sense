@@ -2,8 +2,8 @@ package com.airsense.service;
 
 import com.airsense.dto.HotspotResponseDto;
 import com.airsense.dto.PredictionResponseDto;
-import com.airsense.entity.SensorData;
-import com.airsense.repository.SensorRepository;
+import com.airsense.entity.SensorReading;
+import com.airsense.repository.SensorReadingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -16,14 +16,14 @@ import java.util.*;
 @Slf4j
 public class AiService {
 
-    private final SensorRepository sensorRepository;
+    private final SensorReadingRepository sensorReadingRepository;
     private final RestTemplate restTemplate;
 
     @Value("${ai.service.url:http://localhost:8000}")
     private String aiServiceUrl;
 
-    public AiService(SensorRepository sensorRepository) {
-        this.sensorRepository = sensorRepository;
+    public AiService(SensorReadingRepository sensorReadingRepository) {
+        this.sensorReadingRepository = sensorReadingRepository;
         this.restTemplate = new RestTemplate();
     }
 
@@ -32,9 +32,9 @@ public class AiService {
      */
     public PredictionResponseDto getPrediction(String deviceId) {
         // 1. Fetch latest telemetry from MySQL
-        Optional<SensorData> latestOpt = (deviceId != null)
-                ? sensorRepository.findTopByDeviceIdOrderByRecordedAtDesc(deviceId)
-                : sensorRepository.findTopByOrderByRecordedAtDesc();
+        Optional<SensorReading> latestOpt = (deviceId != null)
+                ? sensorReadingRepository.findTopByDeviceIdOrderByRecordedAtDesc(deviceId)
+                : sensorReadingRepository.findTopByOrderByRecordedAtDesc();
 
         double pm25 = 86.4;
         double temperature = 28.5;
@@ -43,7 +43,7 @@ public class AiService {
         String devId = (deviceId != null) ? deviceId : "ESP32_AIR_01";
 
         if (latestOpt.isPresent()) {
-            SensorData data = latestOpt.get();
+            SensorReading data = latestOpt.get();
             if (data.getTemperature() != null) temperature = data.getTemperature();
             if (data.getHumidity() != null) humidity = data.getHumidity();
             if (data.getCo2() != null) co = data.getCo2();
