@@ -30,6 +30,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
   @override
   void initState() {
     super.initState();
+    generateAlerts();
     fetchRealtimeData();
   }
 

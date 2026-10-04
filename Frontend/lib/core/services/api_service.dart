@@ -15,8 +15,14 @@ class ApiService {
   /// Production Render backend URL
   static const String liveServerUrl = 'https://air-sense-udkn.onrender.com/api';
 
-  /// Timeout for API requests (10s before auto-fallback to responsive offline/demo mode)
-  static const Duration requestTimeout = Duration(seconds: 10);
+  /// Local development backend URL (Spring Boot)
+  static const String localServerUrl = 'http://localhost:8080/api';
+
+  /// Android Emulator local backend URL
+  static const String androidEmulatorUrl = 'http://10.0.2.2:8080/api';
+
+  /// Timeout for API requests (25s accommodates Render free tier cold-start wakeups)
+  static const Duration requestTimeout = Duration(seconds: 25);
 
   /// Determine host based on environment or production default
   static String get defaultBaseUrl {
@@ -28,6 +34,11 @@ class ApiService {
   }
 
   String baseUrl = defaultBaseUrl;
+
+  void setBaseUrl(String url) {
+    baseUrl = url;
+    debugPrint('[ApiService] Active Backend URL set to: $baseUrl');
+  }
 
   /// User Login
   Future<Map<String, dynamic>> login({

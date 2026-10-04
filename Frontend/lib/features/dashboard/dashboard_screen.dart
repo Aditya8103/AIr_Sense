@@ -92,6 +92,18 @@ class _DashboardHomeState extends State<DashboardHome> {
   // ================= URBAN ZONE MODEL =================
   final List<Map<String, dynamic>> urbanZones = [
     {
+      'name': '📡 Live Hardware Node (ESP32_AIR_01)',
+      'source': 'Live IoT Telemetry Stream (MQ135 Gas + DHT Sensor)',
+      'baseAqi': 22,
+      'baseCo2': 375,
+      'baseSmoke': 0.18,
+      'basePm25': 15.0,
+      'basePm10': 25.0,
+      'temp': 31.4,
+      'hum': 48.0,
+      'recommendedAction': 'Real-time telemetry stream active. Hardware synced.',
+    },
+    {
       'name': '🚦 Silk Board Traffic Junction',
       'source': 'Vehicular Emissions & Idling Exhaust (CO + NOx + PM2.5)',
       'baseAqi': 235,
@@ -215,7 +227,7 @@ class _DashboardHomeState extends State<DashboardHome> {
     _subscription = ApiService().getSensorStream().listen((data) {
       if (mounted) {
         setState(() {
-          if (selectedZoneIndex == 0 && data.aqi > 0) {
+          if (selectedZoneIndex == 0 && data.aqi >= 0) {
             aqi = isInterventionActive
                 ? (data.aqi * (1 - reductionPercent / 100)).round()
                 : data.aqi;
