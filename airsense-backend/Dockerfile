@@ -11,11 +11,19 @@ WORKDIR /build
 
 # Cache Maven dependencies by copying pom.xml first
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN mvn -B -ntp \
+    -Dhttp.keepAlive=false \
+    -Dmaven.wagon.http.pool=false \
+    -Dmaven.wagon.http.retryHandler.count=5 \
+    dependency:resolve dependency:resolve-plugins || true
 
 # Copy application source code and build the executable JAR
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn -B -ntp \
+    -Dhttp.keepAlive=false \
+    -Dmaven.wagon.http.pool=false \
+    -Dmaven.wagon.http.retryHandler.count=5 \
+    clean package -DskipTests
 
 # ------------------------------------------------------------------------------
 # Stage 2: Minimal Runtime Stage

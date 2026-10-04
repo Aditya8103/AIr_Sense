@@ -7,13 +7,21 @@
 FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /build
 
-# Cache Maven dependencies
+# Cache Maven dependencies with connection retry and no-transfer-progress
 COPY airsense-backend/pom.xml .
-RUN mvn dependency:go-offline -B
+RUN mvn -B -ntp \
+    -Dhttp.keepAlive=false \
+    -Dmaven.wagon.http.pool=false \
+    -Dmaven.wagon.http.retryHandler.count=5 \
+    dependency:resolve dependency:resolve-plugins || true
 
 # Copy backend source code and build production JAR
 COPY airsense-backend/src ./src
-RUN mvn clean package -DskipTests
+RUN mvn -B -ntp \
+    -Dhttp.keepAlive=false \
+    -Dmaven.wagon.http.pool=false \
+    -Dmaven.wagon.http.retryHandler.count=5 \
+    clean package -DskipTests
 
 # Stage 2: Create minimal, hardened production runtime
 FROM eclipse-temurin:21-jre-alpine AS runner
