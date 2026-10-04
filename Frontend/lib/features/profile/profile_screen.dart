@@ -98,11 +98,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(width: 8),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 880),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             // ================= USER INFO =================
             Center(
               child: Column(
@@ -361,7 +364,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
             ),
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );

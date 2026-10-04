@@ -35,9 +35,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 880),
+          child: ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
           // Section header
           Text(
             'CHOOSE COLOR THEME',
@@ -285,6 +288,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ],
       ),
-    );
+    ),
+  ),
+);
   }
 }
